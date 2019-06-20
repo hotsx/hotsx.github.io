@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 修改 setting.gra">
+<meta name="keywords" content="gradle,kotlin,dsl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradle Kotlin DSL">
+<meta property="og:url" content="http://hotsx.github.io/2019/06/20/gradle-kotlin-dsl/index.html">
+<meta property="og:site_name" content="Hotsx&#39;s Blogs">
+<meta property="og:description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 修改 setting.gra">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-20T12:23:11.299Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gradle Kotlin DSL">
+<meta name="twitter:description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 修改 setting.gra">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://hotsx.github.io/2019/06/20/gradle-kotlin-dsl/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Gradle Kotlin DSL | Hotsx's Blogs</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hotsx's Blogs</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hotsx.github.io/2019/06/20/gradle-kotlin-dsl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hotsx">
+      <meta itemprop="description" content="hotsx's blogs">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hotsx's Blogs">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Gradle Kotlin DSL
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-20 16:36:14 / 修改时间：20:23:11" itemprop="dateCreated datePublished" datetime="2019-06-20T16:36:14+08:00">2019-06-20</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/06/20/gradle-kotlin-dsl/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/06/20/gradle-kotlin-dsl/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。</p>
+<h3 id="迁移条件"><a href="#迁移条件" class="headerlink" title="迁移条件"></a>迁移条件</h3><p>Gradle Wrapper 需要5.0以上版本</p>
+<h3 id="修改-setting-gradle"><a href="#修改-setting-gradle" class="headerlink" title="修改 setting.gradle"></a>修改 setting.gradle</h3><p>重命名文件，加上 <code>.kts</code> 后缀 <code>setting.gradle.kts</code>，所有 <code>.gradle</code> 文件都需要加上 <code>.kts</code> 后缀。<br>修改文件内容</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">include <span class="string">':app'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">include(<span class="string">":app"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="修改-project-build-gradle-kts-文件"><a href="#修改-project-build-gradle-kts-文件" class="headerlink" title="修改 project build.gradle.kts 文件"></a>修改 project build.gradle.kts 文件</h3><p>Groovy 变量声明改为 Kotlin 变量声明，Groovy 中的字符串可以使用单引号包裹而 Kotlin 必须使用双引号。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">ext.kotlin_version = <span class="string">'1.3.40'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line"><span class="keyword">val</span> kotlinVersion = <span class="string">"1.3.40"</span></span><br></pre></td></tr></table></figure>
+<p>buildscript</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">buildscript &#123;</span><br><span class="line">    ext.kotlin_version = <span class="string">'1.3.40'</span></span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath <span class="string">'com.android.tools.build:gradle:3.4.1'</span></span><br><span class="line">        classpath <span class="string">"org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">buildscript &#123;</span><br><span class="line">    <span class="keyword">val</span> kotlinVersion = <span class="string">"1.3.40"</span></span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath(<span class="string">"com.android.tools.build:gradle:3.4.1"</span>)</span><br><span class="line">        classpath(<span class="string">"org.jetbrains.kotlin:kotlin-gradle-plugin:<span class="variable">$kotlinVersion</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>allprojects</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//Grovvy</span><br><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">        maven&#123; url https://jitpack.io &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">        maven(url = <span class="string">"https://jitpack.io"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>task</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">task clean(<span class="string">type:</span> Delete) &#123;</span><br><span class="line">    delete rootProject.buildDir</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">task&lt;Delete&gt;(<span class="string">"clean"</span>) &#123;</span><br><span class="line">    delete(rootProject.buildDir)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="修改-module-build-gradle-kts-文件"><a href="#修改-module-build-gradle-kts-文件" class="headerlink" title="修改 module build.gradle.kts 文件"></a>修改 module build.gradle.kts 文件</h3><p>plugins</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'com.android.application'</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'kotlin-android'</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'kotlin-android-extensions'</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'kotlin-kapt'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">plugins &#123;</span><br><span class="line">    id(<span class="string">"com.android.application"</span>)</span><br><span class="line">    kotlin(<span class="string">"android"</span>)</span><br><span class="line">    id(<span class="string">"kotlin-android-extensions"</span>)</span><br><span class="line">    kotlin(<span class="string">"kapt"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>android</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">android &#123;</span><br><span class="line">    compileSdkVersion <span class="number">29</span></span><br><span class="line">    buildToolsVersion = <span class="string">'28.0.3'</span></span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        applicationId <span class="string">"com.hotsx.bandwagon"</span></span><br><span class="line">        minSdkVersion <span class="number">24</span></span><br><span class="line">        targetSdkVersion <span class="number">29</span></span><br><span class="line">        versionCode <span class="number">1</span></span><br><span class="line">        versionName <span class="string">"1.0"</span></span><br><span class="line">        testInstrumentationRunner <span class="string">"androidx.test.runner.AndroidJUnitRunner"</span></span><br><span class="line">    &#125;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled <span class="literal">false</span></span><br><span class="line">            proguardFiles getDefaultProguardFile (<span class="string">'proguard-android-optimize.txt'</span>), <span class="string">'proguard-rules.pro'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dataBinding &#123;</span><br><span class="line">        enabled <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    androidExtensions &#123;</span><br><span class="line">        experimental = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">configure&lt;AppExtension&gt; &#123;</span><br><span class="line">    compileSdkVersion(<span class="number">29</span>)</span><br><span class="line">    buildToolsVersion(<span class="string">"28.0.3"</span>)</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        applicationId = <span class="string">"com.hotsx.bandwagon"</span></span><br><span class="line">        minSdkVersion(<span class="number">24</span>)</span><br><span class="line">        targetSdkVersion(<span class="number">29</span>)</span><br><span class="line">        versionCode = <span class="number">1</span></span><br><span class="line">        versionName = <span class="string">"1.0"</span></span><br><span class="line">        testInstrumentationRunner = <span class="string">"androidx.test.runner.AndroidJUnitRunner"</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        getByName(<span class="string">"release"</span>) &#123;</span><br><span class="line">            isMinifyEnabled = <span class="literal">false</span></span><br><span class="line">            proguardFiles(getDefaultProguardFile(<span class="string">"proguard-android-optimize.txt"</span>), <span class="string">"proguard-rules.pro"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dataBinding.isEnabled = <span class="literal">true</span></span><br><span class="line">    androidExtensions.isExperimental = <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>dependencies</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">dependencies &#123;</span><br><span class="line">    ext.room_version = <span class="string">"2.1.0"</span></span><br><span class="line">    ext.lifecycle_version = <span class="string">"2.0.0"</span></span><br><span class="line"></span><br><span class="line">    implementation fileTree (<span class="string">dir:</span> <span class="string">'libs'</span>, <span class="string">include:</span> [<span class="string">'*.jar'</span>])</span><br><span class="line">    implementation <span class="string">"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"</span></span><br><span class="line">    implementation <span class="string">'androidx.appcompat:appcompat:1.0.2'</span></span><br><span class="line">    implementation <span class="string">'com.google.android.material:material:1.0.0'</span></span><br><span class="line">    implementation <span class="string">'androidx.constraintlayout:constraintlayout:1.1.3'</span></span><br><span class="line"></span><br><span class="line">    implementation <span class="string">'androidx.navigation:navigation-fragment-ktx:2.1.0-alpha05'</span> <span class="comment">// Navigation</span></span><br><span class="line">    implementation <span class="string">'androidx.navigation:navigation-ui-ktx:2.1.0-alpha05'</span><span class="comment">//Navigation</span></span><br><span class="line">    implementation(<span class="string">"com.squareup.retrofit2:retrofit:2.5.0"</span>)<span class="comment">//retrofit</span></span><br><span class="line">    implementation(<span class="string">"com.squareup.retrofit2:converter-gson:2.5.0"</span>)<span class="comment">//Gson</span></span><br><span class="line">    implementation <span class="string">'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'</span><span class="comment">//Coroutines</span></span><br><span class="line">    implementation(<span class="string">"org.koin:koin-android-viewmodel:2.0.0-GA"</span>)<span class="comment">//Koin</span></span><br><span class="line">    implementation <span class="string">'com.tencent:mmkv-static:1.0.19'</span><span class="comment">//MMKV</span></span><br><span class="line">    implementation <span class="string">'com.orhanobut:logger:2.2.0'</span><span class="comment">//logger</span></span><br><span class="line"></span><br><span class="line">    implementation <span class="string">'androidx.legacy:legacy-support-v4:1.0.0'</span></span><br><span class="line">    kapt <span class="string">"androidx.lifecycle:lifecycle-compiler:$lifecycle_version"</span></span><br><span class="line">    kapt <span class="string">"androidx.room:room-compiler:$room_version"</span></span><br><span class="line">    implementation <span class="string">"androidx.lifecycle:lifecycle-extensions:$lifecycle_version"</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-runtime:$room_version"</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-ktx:$room_version"</span></span><br><span class="line">    implementation <span class="string">"me.toptas.fancyshowcase:fancyshowcaseview:1.1.4"</span><span class="comment">//Fancyshowcaseview</span></span><br><span class="line">    <span class="comment">/**Dialog*/</span></span><br><span class="line">    implementation <span class="string">'com.afollestad.material-dialogs:core:3.0.0-alpha2'</span></span><br><span class="line">    implementation <span class="string">'com.afollestad.material-dialogs:input:3.0.0-alpha2'</span></span><br><span class="line">    <span class="comment">/**chart*/</span></span><br><span class="line">    implementation <span class="string">'com.diogobernardino:williamchart:2.5.0'</span></span><br><span class="line">    <span class="comment">/**debugDatabase*/</span></span><br><span class="line">    debugImplementation <span class="string">'com.amitshekhar.android:debug-db:1.0.6'</span></span><br><span class="line">    <span class="comment">/*test*/</span></span><br><span class="line">    testImplementation <span class="string">'junit:junit:4.12'</span></span><br><span class="line">    androidTestImplementation <span class="string">'androidx.test:runner:1.2.0'</span></span><br><span class="line">    androidTestImplementation <span class="string">'androidx.test.espresso:espresso-core:3.2.0'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">dependencies &#123;</span><br><span class="line">    <span class="keyword">val</span> roomVersion = <span class="string">"2.1.0"</span></span><br><span class="line">    <span class="keyword">val</span> lifecycleVersion = <span class="string">"2.0.0"</span></span><br><span class="line"></span><br><span class="line">    implementation(fileTree(mapOf(<span class="string">"include"</span> to <span class="string">"*.jar"</span>, <span class="string">"dir"</span> to <span class="string">"libs"</span>)))</span><br><span class="line">    implementation(kotlin(<span class="string">"stdlib-jdk8"</span>, KotlinCompilerVersion.VERSION))</span><br><span class="line">    implementation(<span class="string">"androidx.appcompat:appcompat:1.0.2"</span>)</span><br><span class="line">    implementation(<span class="string">"com.google.android.material:material:1.0.0"</span>)</span><br><span class="line">    implementation(<span class="string">"androidx.constraintlayout:constraintlayout:1.1.3"</span>)</span><br><span class="line"></span><br><span class="line">    implementation(<span class="string">"androidx.navigation:navigation-fragment-ktx:2.1.0-alpha05"</span>)<span class="comment">// Navigation</span></span><br><span class="line">    implementation(<span class="string">"androidx.navigation:navigation-ui-ktx:2.1.0-alpha05"</span>)<span class="comment">//Navigation</span></span><br><span class="line">    implementation(<span class="string">"com.squareup.retrofit2:retrofit:2.5.0"</span>)<span class="comment">//retrofit</span></span><br><span class="line">    implementation(<span class="string">"com.squareup.retrofit2:converter-gson:2.5.0"</span>)<span class="comment">//Gson</span></span><br><span class="line">    implementation(<span class="string">"com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"</span>)<span class="comment">//Coroutines</span></span><br><span class="line">    implementation(<span class="string">"org.koin:koin-android-viewmodel:2.0.0-GA"</span>)<span class="comment">//Koin</span></span><br><span class="line">    implementation(<span class="string">"com.tencent:mmkv-static:1.0.19"</span>)<span class="comment">//MMKV</span></span><br><span class="line">    implementation(<span class="string">"com.orhanobut:logger:2.2.0"</span>)<span class="comment">//logger</span></span><br><span class="line"></span><br><span class="line">    implementation(<span class="string">"androidx.legacy:legacy-support-v4:1.0.0"</span>)</span><br><span class="line">    kapt(<span class="string">"androidx.lifecycle:lifecycle-compiler:<span class="variable">$lifecycleVersion</span>"</span>)</span><br><span class="line">    kapt(<span class="string">"androidx.room:room-compiler:<span class="variable">$roomVersion</span>"</span>)</span><br><span class="line">    implementation(<span class="string">"androidx.lifecycle:lifecycle-extensions:<span class="variable">$lifecycleVersion</span>"</span>)</span><br><span class="line">    implementation(<span class="string">"androidx.room:room-runtime:<span class="variable">$roomVersion</span>"</span>)</span><br><span class="line">    implementation(<span class="string">"androidx.room:room-ktx:<span class="variable">$roomVersion</span>"</span>)</span><br><span class="line">    implementation(<span class="string">"me.toptas.fancyshowcase:fancyshowcaseview:1.1.4"</span>)<span class="comment">//Fancyshowcaseview</span></span><br><span class="line">    <span class="comment">/**Dialog*/</span></span><br><span class="line">    implementation(<span class="string">"com.afollestad.material-dialogs:core:3.0.0-alpha2"</span>)</span><br><span class="line">    implementation(<span class="string">"com.afollestad.material-dialogs:input:3.0.0-alpha2"</span>)</span><br><span class="line">    <span class="comment">/**chart*/</span></span><br><span class="line">    implementation(<span class="string">"com.diogobernardino:williamchart:2.5.0"</span>)</span><br><span class="line">    <span class="comment">/**debugDatabase*/</span></span><br><span class="line">    debugImplementation(<span class="string">"com.amitshekhar.android:debug-db:1.0.6"</span>)</span><br><span class="line">    <span class="comment">/*test*/</span></span><br><span class="line">    testImplementation(<span class="string">"junit:junit:4.12"</span>)</span><br><span class="line">    androidTestImplementation(<span class="string">"androidx.test:runner:1.2.0"</span>)</span><br><span class="line">    androidTestImplementation(<span class="string">"androidx.test.espresso:espresso-core:3.2.0"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>所有 <code>.gradle</code> 文件修改完成后重新 build 项目即可。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://guides.gradle.org/migrating-build-logic-from-groovy-to-kotlin/" target="_blank" rel="noopener">Migrating build logic from Groovy to Kotlin</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/gradle/" rel="tag"># gradle</a>
+          
+            <a href="/tags/kotlin/" rel="tag"># kotlin</a>
+          
+            <a href="/tags/dsl/" rel="tag"># dsl</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/19/android-multi-language/" rel="next" title="Android Multi Language">
+                <i class="fa fa-chevron-left"></i> Android Multi Language
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Hotsx</p>
+              <div class="site-description motion-element" itemprop="description">hotsx's blogs</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#迁移条件"><span class="nav-number">1.</span> <span class="nav-text">迁移条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-setting-gradle"><span class="nav-number">2.</span> <span class="nav-text">修改 setting.gradle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-project-build-gradle-kts-文件"><span class="nav-number">3.</span> <span class="nav-text">修改 project build.gradle.kts 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-module-build-gradle-kts-文件"><span class="nav-number">4.</span> <span class="nav-text">修改 module build.gradle.kts 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束"><span class="nav-number">5.</span> <span class="nav-text">结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hotsx</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.2"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'erCmmns85y5zQoKjTXGF2T9N-gzGzoHsz',
+    appKey: 'RxGo1fwQ4TDroBS5AmvmcvwV',
+    placeholder: '留言',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
