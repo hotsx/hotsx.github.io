@@ -2,6 +2,7 @@
 title: Android Multi Language
 date: 2019-06-19 19:13:10
 tags: android
+categories: Android
 ---
 
 Android 开发者如果需要在海外发布 App 必不可少的要用到多语言的切换，这里记录 Android 多语言切换的基础实现。

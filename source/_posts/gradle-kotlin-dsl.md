@@ -2,6 +2,7 @@
 title: Gradle Kotlin DSL
 date: 2019-06-20 16:36:14
 tags: [gradle,kotlin,dsl]
+categories: Android
 ---
 
 Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。
@@ -10,7 +11,7 @@ Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的�
 
 Gradle Wrapper 需要5.0以上版本
 
-### 修改 setting.gradle
+### setting.gradle
 
 重命名文件，加上 `.kts` 后缀 `setting.gradle.kts`，所有 `.gradle` 文件都需要加上 `.kts` 后缀。
 修改文件内容
@@ -25,7 +26,7 @@ include ':app'
 include(":app")
 ```
 
-### 修改 project build.gradle.kts 文件
+### project build.gradle.kts
 
 Groovy 变量声明改为 Kotlin 变量声明，Groovy 中的字符串可以使用单引号包裹而 Kotlin 必须使用双引号。
 
@@ -111,7 +112,7 @@ task<Delete>("clean") {
 }
 ```
 
-### 修改 module build.gradle.kts 文件
+### module build.gradle.kts
 
 plugins
 
