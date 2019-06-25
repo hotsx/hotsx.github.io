@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-CN">
+<html class="theme-next pisces use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -70,7 +70,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Pisces',
     version: '7.1.2',
     sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
     back2top: true,
@@ -96,18 +96,18 @@
 
 
 
-  <meta name="description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 修改 setting.gra">
+  <meta name="description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 setting.gradle">
 <meta name="keywords" content="gradle,kotlin,dsl">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gradle Kotlin DSL">
 <meta property="og:url" content="http://hotsx.github.io/2019/06/20/gradle-kotlin-dsl/index.html">
 <meta property="og:site_name" content="Hotsx&#39;s Blogs">
-<meta property="og:description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 修改 setting.gra">
+<meta property="og:description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 setting.gradle">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-20T12:23:11.299Z">
+<meta property="og:updated_time" content="2019-06-21T14:55:24.688Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gradle Kotlin DSL">
-<meta name="twitter:description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 修改 setting.gra">
+<meta name="twitter:description" content="Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。 迁移条件Gradle Wrapper 需要5.0以上版本 setting.gradle">
 
 
 
@@ -189,6 +189,10 @@
       </a>
     </div>
     
+      
+        <p class="site-subtitle">My half of soul</p>
+      
+    
     
   </div>
 
@@ -228,6 +232,40 @@
         
         
           
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
           <li class="menu-item menu-item-archives">
 
     
@@ -246,9 +284,6 @@
       
     </ul>
   
-
-  
-    
 
   
 
@@ -270,6 +305,9 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
+            
+
           
           <div id="content" class="content">
             
@@ -294,8 +332,8 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Hotsx">
-      <meta itemprop="description" content="hotsx's blogs">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="description" content="Give you My half of soul">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -333,16 +371,46 @@
                 
               
 
-              <time title="创建时间：2019-06-20 16:36:14 / 修改时间：20:23:11" itemprop="dateCreated datePublished" datetime="2019-06-20T16:36:14+08:00">2019-06-20</time>
+              <time title="创建时间：2019-06-20 16:36:14" itemprop="dateCreated datePublished" datetime="2019-06-20T16:36:14+08:00">2019-06-20</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-21 22:55:24" itemprop="dateModified" datetime="2019-06-21T22:55:24+08:00">2019-06-21</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -387,10 +455,10 @@
       
         <p>Android Studio 使用的是 Gradle 构建 Android 项目，而 Gradle 使用的是基于 Groovy 语言的 DSL 来配置项目的。因为 Groovy 是动态语言，并且为了项目语言的统一和减少语言学习成本，所以我选择从 Groovy 迁移到 Kotlin DSL。这里记录迁移步骤😄。</p>
 <h3 id="迁移条件"><a href="#迁移条件" class="headerlink" title="迁移条件"></a>迁移条件</h3><p>Gradle Wrapper 需要5.0以上版本</p>
-<h3 id="修改-setting-gradle"><a href="#修改-setting-gradle" class="headerlink" title="修改 setting.gradle"></a>修改 setting.gradle</h3><p>重命名文件，加上 <code>.kts</code> 后缀 <code>setting.gradle.kts</code>，所有 <code>.gradle</code> 文件都需要加上 <code>.kts</code> 后缀。<br>修改文件内容</p>
+<h3 id="setting-gradle"><a href="#setting-gradle" class="headerlink" title="setting.gradle"></a>setting.gradle</h3><p>重命名文件，加上 <code>.kts</code> 后缀 <code>setting.gradle.kts</code>，所有 <code>.gradle</code> 文件都需要加上 <code>.kts</code> 后缀。<br>修改文件内容</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">include <span class="string">':app'</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">include(<span class="string">":app"</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="修改-project-build-gradle-kts-文件"><a href="#修改-project-build-gradle-kts-文件" class="headerlink" title="修改 project build.gradle.kts 文件"></a>修改 project build.gradle.kts 文件</h3><p>Groovy 变量声明改为 Kotlin 变量声明，Groovy 中的字符串可以使用单引号包裹而 Kotlin 必须使用双引号。</p>
+<h3 id="project-build-gradle-kts"><a href="#project-build-gradle-kts" class="headerlink" title="project build.gradle.kts"></a>project build.gradle.kts</h3><p>Groovy 变量声明改为 Kotlin 变量声明，Groovy 中的字符串可以使用单引号包裹而 Kotlin 必须使用双引号。</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">ext.kotlin_version = <span class="string">'1.3.40'</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line"><span class="keyword">val</span> kotlinVersion = <span class="string">"1.3.40"</span></span><br></pre></td></tr></table></figure>
 <p>buildscript</p>
@@ -402,7 +470,7 @@
 <p>task</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">task clean(<span class="string">type:</span> Delete) &#123;</span><br><span class="line">    delete rootProject.buildDir</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">task&lt;Delete&gt;(<span class="string">"clean"</span>) &#123;</span><br><span class="line">    delete(rootProject.buildDir)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="修改-module-build-gradle-kts-文件"><a href="#修改-module-build-gradle-kts-文件" class="headerlink" title="修改 module build.gradle.kts 文件"></a>修改 module build.gradle.kts 文件</h3><p>plugins</p>
+<h3 id="module-build-gradle-kts"><a href="#module-build-gradle-kts" class="headerlink" title="module build.gradle.kts"></a>module build.gradle.kts</h3><p>plugins</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Groovy</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'com.android.application'</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'kotlin-android'</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'kotlin-android-extensions'</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'kotlin-kapt'</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line">plugins &#123;</span><br><span class="line">    id(<span class="string">"com.android.application"</span>)</span><br><span class="line">    kotlin(<span class="string">"android"</span>)</span><br><span class="line">    id(<span class="string">"kotlin-android-extensions"</span>)</span><br><span class="line">    kotlin(<span class="string">"kapt"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>android</p>
@@ -466,6 +534,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/06/24/lol/" rel="prev" title="LOL精彩集锦">
+                LOL精彩集锦 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -526,8 +598,10 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpg" alt="Hotsx">
+            
               <p class="site-author-name" itemprop="name">Hotsx</p>
-              <div class="site-description motion-element" itemprop="description">hotsx's blogs</div>
+              <div class="site-description motion-element" itemprop="description">Give you My half of soul</div>
           </div>
 
           
@@ -537,12 +611,31 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
 
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
               
 
               
@@ -551,18 +644,24 @@
                 <div class="site-state-item site-state-tags">
                   
                     
+                      <a href="/tags/">
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">标签</span>
                   
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
                 </div>
               
             </nav>
@@ -572,6 +671,32 @@
 
           
 
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/hotsx" title="GitHub &rarr; https://github.com/hotsx" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:hotsxu@gmail.com" title="E-Mail &rarr; mailto:hotsxu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
           
 
           
@@ -598,7 +723,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#迁移条件"><span class="nav-number">1.</span> <span class="nav-text">迁移条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-setting-gradle"><span class="nav-number">2.</span> <span class="nav-text">修改 setting.gradle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-project-build-gradle-kts-文件"><span class="nav-number">3.</span> <span class="nav-text">修改 project build.gradle.kts 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-module-build-gradle-kts-文件"><span class="nav-number">4.</span> <span class="nav-text">修改 module build.gradle.kts 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束"><span class="nav-number">5.</span> <span class="nav-text">结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#迁移条件"><span class="nav-number">1.</span> <span class="nav-text">迁移条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setting-gradle"><span class="nav-number">2.</span> <span class="nav-text">setting.gradle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#project-build-gradle-kts"><span class="nav-number">3.</span> <span class="nav-text">project build.gradle.kts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#module-build-gradle-kts"><span class="nav-number">4.</span> <span class="nav-text">module build.gradle.kts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束"><span class="nav-number">5.</span> <span class="nav-text">结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
@@ -639,7 +764,7 @@
 
 
 
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.2</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.1.2</div>
 
 
 
@@ -696,7 +821,7 @@
     
     
   
-  <script color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script color="128,0,128" opacity="1" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
 
 
 
@@ -733,7 +858,9 @@
   
 
 
-  <script src="/js/schemes/muse.js?v=7.1.2"></script>
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
 
 
 
@@ -757,6 +884,7 @@
 
   
   
+
 
 <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
 
