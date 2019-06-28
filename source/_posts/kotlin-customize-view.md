@@ -28,8 +28,7 @@ onTouchEvent
 这里记录实现一个圆环进度控件 RingView 的步骤。
 
 ```kotlin
-class RingView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    View(context, attrs, defStyleAttr)
+class RingView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :View(context, attrs, defStyleAttr)
 ```
 
 这里使用了 Kotlin 中的 `@JvmOverloads` 注解来标记构造函数，`@JvmOverloads` 的作用就是能够使 RingView 的单个构造函数在编译过程中通过默认值来生成三个不同的构造函数，等同于 Java 实现三个参数不同的构造函数。
