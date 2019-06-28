@@ -87,7 +87,7 @@ class RingView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 ```
 
-绘制图形的关键类 `Paint Canvas` 
+绘制图形的关键类 `Paint Canvas`
 
 ```kotlin
     override fun onDraw(canvas: Canvas) {
