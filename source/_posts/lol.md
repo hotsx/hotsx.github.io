@@ -25,3 +25,4 @@ categories: LOL
 
 #### 4.一万个超级兵
 
+{% dplayer "url=https://onedrive.gimhoy.com/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3YvcyFBcEh2MjFHNDFLM1FpcUlQN1R5c0ZZcmNQOHk4YXc=.mp4" "api=http://dplayer.daoapp.io"  "theme=#FADFA3" "autoplay=false" "token=tokendemo" %}

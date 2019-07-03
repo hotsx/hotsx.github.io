@@ -19,6 +19,7 @@
     "hexo-renderer-stylus": "^0.3.3",
     "hexo-server": "^0.3.3",
     "hexo-tag-bilibili": "^0.2.1",
+    "hexo-tag-dplayer": "^0.3.3",
     "peer": "^0.2.10",
     "radium": "^0.25.2",
     "react": "^16.8.6"
