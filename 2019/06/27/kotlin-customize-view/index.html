@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Android 的自定义 View 属于 Android 开发的基础技能，但是要能够熟练的实现设计所需的 View 也需要多练习实践。 自定义 View 步骤 创建 View 处理 View 布局 绘制 View 处理 交互事件 优化自定义 View  自定义 View 关键方法123onMeasureonDrawonTouchEvent 继承 View这里记录实现一个圆环进度控件 RingVie">
+<meta name="keywords" content="android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin 自定义环形进度控件">
+<meta property="og:url" content="http://hotsx.github.io/2019/06/27/kotlin-customize-view/index.html">
+<meta property="og:site_name" content="Hotsx&#39;s Blogs">
+<meta property="og:description" content="Android 的自定义 View 属于 Android 开发的基础技能，但是要能够熟练的实现设计所需的 View 也需要多练习实践。 自定义 View 步骤 创建 View 处理 View 布局 绘制 View 处理 交互事件 优化自定义 View  自定义 View 关键方法123onMeasureonDrawonTouchEvent 继承 View这里记录实现一个圆环进度控件 RingVie">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-28T15:39:34.508Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kotlin 自定义环形进度控件">
+<meta name="twitter:description" content="Android 的自定义 View 属于 Android 开发的基础技能，但是要能够熟练的实现设计所需的 View 也需要多练习实践。 自定义 View 步骤 创建 View 处理 View 布局 绘制 View 处理 交互事件 优化自定义 View  自定义 View 关键方法123onMeasureonDrawonTouchEvent 继承 View这里记录实现一个圆环进度控件 RingVie">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://hotsx.github.io/2019/06/27/kotlin-customize-view/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Kotlin 自定义环形进度控件 | Hotsx's Blogs</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hotsx's Blogs</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">My half of soul</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hotsx.github.io/2019/06/27/kotlin-customize-view/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hotsx">
+      <meta itemprop="description" content="Give you My half of soul">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hotsx's Blogs">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Kotlin 自定义环形进度控件
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-27 18:07:24" itemprop="dateCreated datePublished" datetime="2019-06-27T18:07:24+08:00">2019-06-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-28 23:39:34" itemprop="dateModified" datetime="2019-06-28T23:39:34+08:00">2019-06-28</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/06/27/kotlin-customize-view/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/06/27/kotlin-customize-view/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Android 的自定义 View 属于 Android 开发的基础技能，但是要能够熟练的实现设计所需的 View 也需要多练习实践。</p>
+<h3 id="自定义-View-步骤"><a href="#自定义-View-步骤" class="headerlink" title="自定义 View 步骤"></a>自定义 View 步骤</h3><ol>
+<li>创建 View</li>
+<li>处理 View 布局</li>
+<li>绘制 View</li>
+<li>处理 交互事件</li>
+<li>优化自定义 View</li>
+</ol>
+<h3 id="自定义-View-关键方法"><a href="#自定义-View-关键方法" class="headerlink" title="自定义 View 关键方法"></a>自定义 View 关键方法</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onMeasure</span><br><span class="line">onDraw</span><br><span class="line">onTouchEvent</span><br></pre></td></tr></table></figure>
+<h3 id="继承-View"><a href="#继承-View" class="headerlink" title="继承 View"></a>继承 View</h3><p>这里记录实现一个圆环进度控件 RingView 的步骤。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RingView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span></span>(context: Context, attrs: AttributeSet? = <span class="literal">null</span>, defStyleAttr: <span class="built_in">Int</span> = <span class="number">0</span>) :View(context, attrs, defStyleAttr)</span><br></pre></td></tr></table></figure>
+<p>这里使用了 Kotlin 中的 <code>@JvmOverloads</code> 注解来标记构造函数，<code>@JvmOverloads</code> 的作用就是能够使 RingView 的单个构造函数在编译过程中通过默认值来生成三个不同的构造函数，等同于 Java 实现三个参数不同的构造函数。</p>
+<h3 id="测量-View-的绘制区域"><a href="#测量-View-的绘制区域" class="headerlink" title="测量 View 的绘制区域"></a>测量 View 的绘制区域</h3><p>因为 RingView 是一个圆环进度控件，所以所需的绘制区域是一个正方形，View 的可绘制区域受到父控件的限制，所以正方形区域的边长则取 width 和 height 中的 min 值。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onMeasure</span><span class="params">(widthMeasureSpec: <span class="type">Int</span>, heightMeasureSpec: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">      <span class="keyword">val</span> widthSpecSize = MeasureSpec.getSize(widthMeasureSpec)</span><br><span class="line">      <span class="keyword">val</span> heightSpecSize = MeasureSpec.getSize(heightMeasureSpec)</span><br><span class="line">      <span class="keyword">val</span> minSize = min(widthSpecSize, heightSpecSize)</span><br><span class="line">      setMeasuredDimension(minSize, minSize)<span class="comment">//保证绘制区域为正方形</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="绘制-View"><a href="#绘制-View" class="headerlink" title="绘制 View"></a>绘制 View</h3><p>定义绘制图形所需要的一些属性</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> maxValue = <span class="number">100f</span><span class="comment">//圆环最大值</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentValue = <span class="number">10f</span><span class="comment">//圆环当前值</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> ringColor = Color.WHITE<span class="comment">//外层圆环颜色</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentColor = Color.BLUE<span class="comment">//内层圆弧颜色</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> textColor = Color.BLACK<span class="comment">//字体颜色</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> ringWidth = <span class="number">100f</span><span class="comment">//外层圆环宽度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> currentRect = RectF()<span class="comment">//画内层圆弧所需</span></span><br></pre></td></tr></table></figure>
+<p>如果需要在 xml 中能够配置某些属性则需要在 attrs 文件中声明属性</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"RingView"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"ringColor"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"currentColor"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"textColor"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在自定义 View 中获取这些 xml 中配置的属性</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">init</span> &#123;</span><br><span class="line">    attrs?.let &#123;</span><br><span class="line">        <span class="keyword">val</span> typeArray = context.obtainStyledAttributes(it, R.styleable.RingView)</span><br><span class="line">        ringColor = typeArray.getColor(R.styleable.RingView_ringColor, Color.WHITE)</span><br><span class="line">        currentColor = typeArray.getColor(R.styleable.RingView_currentColor, Color.BLUE)</span><br><span class="line">        textColor = typeArray.getColor(R.styleable.RingView_textColor, Color.BLACK)</span><br><span class="line">        typeArray.recycle()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>绘制图形的关键类 <code>Paint Canvas</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDraw</span><span class="params">(canvas: <span class="type">Canvas</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> center = width / <span class="number">2f</span><span class="comment">//圆心点</span></span><br><span class="line">    <span class="keyword">val</span> radius = center - ringWidth / <span class="number">2</span><span class="comment">//圆环半径</span></span><br><span class="line">    <span class="comment">//画圆环底色</span></span><br><span class="line">    paint.isAntiAlias = <span class="literal">true</span></span><br><span class="line">    paint.color = ringColor</span><br><span class="line">    paint.style = Paint.Style.STROKE</span><br><span class="line">    paint.strokeWidth = ringWidth</span><br><span class="line">    canvas.drawCircle(center, center, radius, paint)</span><br><span class="line">    <span class="comment">//画圆环进度弧形</span></span><br><span class="line">    <span class="keyword">val</span> currentAngle = currentValue / maxValue * <span class="number">360f</span><span class="comment">//进度弧形角度</span></span><br><span class="line">    currentRect.<span class="keyword">set</span>(ringWidth / <span class="number">2f</span>, ringWidth / <span class="number">2f</span>, width - ringWidth / <span class="number">2f</span>, width - ringWidth / <span class="number">2f</span>)</span><br><span class="line">    paint.color = currentColor</span><br><span class="line">    paint.strokeWidth = ringWidth - <span class="number">20f</span></span><br><span class="line">    canvas.drawArc(currentRect, <span class="number">90f</span>, currentAngle, <span class="literal">false</span>, paint)</span><br><span class="line">    <span class="comment">//画百分比文字</span></span><br><span class="line">    paint.style = Paint.Style.FILL</span><br><span class="line">    paint.color = textColor</span><br><span class="line">    paint.strokeWidth = <span class="number">12f</span></span><br><span class="line">    paint.textSize = <span class="number">100f</span></span><br><span class="line">    paint.typeface = Typeface.DEFAULT_BOLD</span><br><span class="line">    paint.textAlign = Paint.Align.CENTER</span><br><span class="line">    <span class="keyword">val</span> text = <span class="string">"<span class="subst">$&#123;(currentValue / maxValue * <span class="number">100</span>).toInt()&#125;</span>%"</span></span><br><span class="line">    <span class="keyword">val</span> fontMetrics = paint.fontMetrics</span><br><span class="line">    <span class="keyword">val</span> distance = (fontMetrics.bottom - fontMetrics.top) / <span class="number">2f</span> - fontMetrics.bottom</span><br><span class="line">    canvas.drawText(text, center, center + distance, paint)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个控件并没有重载 <code>onTouchEvent</code> 方法，因为暂时不需要处理用户的触摸点击事件，但是添加了进度动画，使用 <code>ValueAnimator</code> 实现。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">setProgress</span><span class="params">(progress: <span class="type">Float</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (animator.isRunning) &#123;</span><br><span class="line">        animator.cancel()</span><br><span class="line">    &#125;</span><br><span class="line">    animator = ValueAnimator.ofFloat(currentValue, progress)</span><br><span class="line">    animator.duration = <span class="number">1000L</span></span><br><span class="line">    animator.addUpdateListener &#123;</span><br><span class="line">        currentValue = it.animatedValue <span class="keyword">as</span> <span class="built_in">Float</span></span><br><span class="line">        invalidate()</span><br><span class="line">    &#125;</span><br><span class="line">    animator.start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>这只是最基础的自定义 View 实现过程。在 Android 开发这条路上还有很长的路要走。<a href="https://github.com/hotsx/hotsx-tools/blob/master/ringview/src/main/java/com/hotsx/ringview/RingView.kt" target="_blank" rel="noopener">这里是源码</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/24/lol/" rel="next" title="LOL精彩集锦">
+                <i class="fa fa-chevron-left"></i> LOL精彩集锦
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/29/windows-flutter/" rel="prev" title="Windows 配置Flutter 环境">
+                Windows 配置Flutter 环境 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpg" alt="Hotsx">
+            
+              <p class="site-author-name" itemprop="name">Hotsx</p>
+              <div class="site-description motion-element" itemprop="description">Give you My half of soul</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/hotsx" title="GitHub &rarr; https://github.com/hotsx" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:hotsxu@gmail.com" title="E-Mail &rarr; mailto:hotsxu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义-View-步骤"><span class="nav-number">1.</span> <span class="nav-text">自定义 View 步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义-View-关键方法"><span class="nav-number">2.</span> <span class="nav-text">自定义 View 关键方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#继承-View"><span class="nav-number">3.</span> <span class="nav-text">继承 View</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测量-View-的绘制区域"><span class="nav-number">4.</span> <span class="nav-text">测量 View 的绘制区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#绘制-View"><span class="nav-number">5.</span> <span class="nav-text">绘制 View</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束"><span class="nav-number">6.</span> <span class="nav-text">结束</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hotsx</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.1.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color="128,0,128" opacity="1" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'erCmmns85y5zQoKjTXGF2T9N-gzGzoHsz',
+    appKey: 'RxGo1fwQ4TDroBS5AmvmcvwV',
+    placeholder: '留言',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
