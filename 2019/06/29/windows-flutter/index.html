@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-CN">
+<html class="theme-next muse use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -70,7 +70,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '7.1.2',
     sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
     back2top: true,
@@ -96,18 +96,18 @@
 
 
 
-  <meta name="description" content="Give you My half of soul">
+  <meta name="description" content="使用镜像由于在国内访问Flutter有时可能会受到限制，Flutter官方为中国开发者搭建了临时镜像，大家可以将如下环境变量加入到用户环境变量中： 12export PUB_HOSTED_URL=https://pub.flutter-io.cnexport FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn 系统要求要安装并运行Flutt">
 <meta name="keywords" content="android,flutter">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Windows 配置Flutter 环境">
 <meta property="og:url" content="http://hotsx.github.io/2019/06/29/windows-flutter/index.html">
 <meta property="og:site_name" content="Hotsx&#39;s Blogs">
-<meta property="og:description" content="Give you My half of soul">
+<meta property="og:description" content="使用镜像由于在国内访问Flutter有时可能会受到限制，Flutter官方为中国开发者搭建了临时镜像，大家可以将如下环境变量加入到用户环境变量中： 12export PUB_HOSTED_URL=https://pub.flutter-io.cnexport FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn 系统要求要安装并运行Flutt">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-28T17:46:41.505Z">
+<meta property="og:updated_time" content="2019-09-22T19:40:51.512Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Windows 配置Flutter 环境">
-<meta name="twitter:description" content="Give you My half of soul">
+<meta name="twitter:description" content="使用镜像由于在国内访问Flutter有时可能会受到限制，Flutter官方为中国开发者搭建了临时镜像，大家可以将如下环境变量加入到用户环境变量中： 12export PUB_HOSTED_URL=https://pub.flutter-io.cnexport FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn 系统要求要安装并运行Flutt">
 
 
 
@@ -286,6 +286,9 @@
   
 
   
+    
+
+  
 
   
 </nav>
@@ -305,9 +308,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -371,12 +371,24 @@
                 
               
 
-              <time title="创建时间：2019-06-29 01:45:06 / 修改时间：01:46:41" itemprop="dateCreated datePublished" datetime="2019-06-29T01:45:06+08:00">2019-06-29</time>
+              <time title="创建时间：2019-06-29 01:45:06" itemprop="dateCreated datePublished" datetime="2019-06-29T01:45:06+08:00">2019-06-29</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-23 03:40:51" itemprop="dateModified" datetime="2019-09-23T03:40:51+08:00">2019-09-23</time>
               
             
           </span>
@@ -441,7 +453,39 @@
       
 
       
-        
+        <h4 id="使用镜像"><a href="#使用镜像" class="headerlink" title="使用镜像"></a>使用镜像</h4><p>由于在国内访问Flutter有时可能会受到限制，Flutter官方为中国开发者搭建了临时镜像，大家可以将如下环境变量加入到用户环境变量中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PUB_HOSTED_URL=https://pub.flutter-io.cn</span><br><span class="line"><span class="built_in">export</span> FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn</span><br></pre></td></tr></table></figure>
+<h4 id="系统要求"><a href="#系统要求" class="headerlink" title="系统要求"></a>系统要求</h4><p>要安装并运行Flutter，您的开发环境必须满足以下最低要求:</p>
+<ul>
+<li>操作系统: Windows 7 或更高版本 (64-bit)</li>
+<li>磁盘空间: 400 MB (不包括Android Studio的磁盘空间)</li>
+<li>工具: Flutter 依赖 Git for Windows (Git命令行工具)</li>
+</ul>
+<h4 id="获取Flutter-SDK"><a href="#获取Flutter-SDK" class="headerlink" title="获取Flutter SDK"></a>获取Flutter SDK</h4><ol>
+<li><p>去flutter官网下载其最新可用的安装包，<a href="https://flutter.dev/docs/development/tools/sdk/releases#windows" target="_blank" rel="noopener">点击下载</a>，或者到 <a href="https://github.com/flutter/flutter/releases" target="_blank" rel="noopener">Github</a> 仓库下载。</p>
+</li>
+<li><p>将安装包zip解压到你想安装Flutter SDK的路径(如：C:\src\flutter；注意，不要将flutter安装到需要一些高权限的路径如C:\Program Files)。</p>
+</li>
+<li><p>在Flutter安装目录的flutter文件下找到flutter_console.bat，双击运行并启动flutter命令行，接下来，你就可以在Flutter命令行运行flutter命令了。</p>
+</li>
+</ol>
+<h4 id="更新环境变量"><a href="#更新环境变量" class="headerlink" title="更新环境变量"></a>更新环境变量</h4><p>要在终端运行 flutter 命令， 你需要添加以下环境变量到系统PATH：</p>
+<ul>
+<li>转到 “控制面板&gt;用户帐户&gt;用户帐户&gt;更改我的环境变量”.</li>
+<li>在“用户变量”下检查是否有名为“Path”的条目:<ul>
+<li>如果该条目存在, 追加 flutter\bin的全路径，使用 ; 作为分隔符.</li>
+<li>如果条目不存在, 创建一个新用户变量 Path ，然后将 flutter\bin的全路径作为它的值.</li>
+</ul>
+</li>
+<li>在“用户变量”下检查是否有名为”PUB_HOSTED_URL”和”FLUTTER_STORAGE_BASE_URL”的条目，如果没有，也添加它们.</li>
+</ul>
+<h4 id="运行-flutter-doctor"><a href="#运行-flutter-doctor" class="headerlink" title="运行 flutter doctor"></a>运行 flutter doctor</h4><p>打开一个新的命令提示符或PowerShell窗口并运行以下命令以查看是否需要安装任何依赖项来完成安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter doctor</span><br></pre></td></tr></table></figure>
+<p>该命令检查您的环境并在终端窗口中显示报告。Dart SDK已经在捆绑在Flutter里了，没有必要单独安装Dart。 仔细检查命令行输出以获取可能需要安装的其他软件或进一步需要执行的任务（以粗体显示）</p>
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[-] Android toolchain - develop <span class="keyword">for</span> Android devices</span><br><span class="line">    • Android SDK at D:\Android\sdk</span><br><span class="line">    ✗ Android SDK is missing <span class="built_in">command</span> line tools; download from https://goo.gl/XxQghQ</span><br><span class="line">    • Try re-installing or updating your Android SDK,</span><br><span class="line">      visit https://flutter.io/setup/<span class="comment">#android-setup for detailed instructions.</span></span><br></pre></td></tr></table></figure>
+<p>第一次运行一个flutter命令（如flutter doctor）时，它会下载它自己的依赖项并自行编译。以后再运行就会快得多。</p>
+
       
     </div>
 
@@ -492,6 +536,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/07/30/watchface-development/" rel="prev" title="WearOS Watch face 开发基础">
+                WearOS Watch face 开发基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -538,8 +586,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -556,7 +613,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -660,6 +717,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用镜像"><span class="nav-number">1.</span> <span class="nav-text">使用镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统要求"><span class="nav-number">2.</span> <span class="nav-text">系统要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取Flutter-SDK"><span class="nav-number">3.</span> <span class="nav-text">获取Flutter SDK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新环境变量"><span class="nav-number">4.</span> <span class="nav-text">更新环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行-flutter-doctor"><span class="nav-number">5.</span> <span class="nav-text">运行 flutter doctor</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -674,7 +748,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -694,7 +768,7 @@
 
 
 
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.1.2</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.2</div>
 
 
 
@@ -788,9 +862,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.1.2"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+  <script src="/js/schemes/muse.js?v=7.1.2"></script>
 
 
 
