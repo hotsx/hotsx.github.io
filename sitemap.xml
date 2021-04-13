@@ -4,64 +4,131 @@
   <url>
     <loc>http://hotsx.github.io/2020/06/29/pixel4-magisk-root/</loc>
     
-    <lastmod>2020-09-02T02:59:42.457Z</lastmod>
+    <lastmod>2020-09-02</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/2019/06/29/windows-flutter/</loc>
     
-    <lastmod>2019-09-22T19:40:51.512Z</lastmod>
+    <lastmod>2019-09-22</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/2019/07/30/watchface-development/</loc>
     
-    <lastmod>2019-09-22T19:40:51.506Z</lastmod>
+    <lastmod>2019-09-22</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/2019/06/24/lol/</loc>
     
-    <lastmod>2019-09-22T19:40:51.501Z</lastmod>
+    <lastmod>2019-09-22</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/2019/06/27/kotlin-customize-view/</loc>
     
-    <lastmod>2019-06-28T15:39:34.508Z</lastmod>
+    <lastmod>2019-06-28</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/tags/index.html</loc>
     
-    <lastmod>2019-06-21T14:55:24.694Z</lastmod>
+    <lastmod>2019-06-21</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/categories/index.html</loc>
     
-    <lastmod>2019-06-21T14:55:24.691Z</lastmod>
+    <lastmod>2019-06-21</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/2019/06/20/gradle-kotlin-dsl/</loc>
     
-    <lastmod>2019-06-21T14:55:24.688Z</lastmod>
+    <lastmod>2019-06-21</lastmod>
     
   </url>
   
   <url>
     <loc>http://hotsx.github.io/2019/06/19/android-multi-language/</loc>
     
-    <lastmod>2019-06-21T14:55:24.684Z</lastmod>
+    <lastmod>2019-06-21</lastmod>
     
+  </url>
+  
+
+  <url>
+    <loc>http://hotsx.github.io/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>http://hotsx.github.io/tags/android/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://hotsx.github.io/tags/gradle/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://hotsx.github.io/tags/kotlin/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://hotsx.github.io/tags/dsl/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://hotsx.github.io/tags/lol/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://hotsx.github.io/tags/flutter/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>http://hotsx.github.io/categories/android/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://hotsx.github.io/categories/lol/</loc>
+    <lastmod>2021-04-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
   </url>
   
 </urlset>
